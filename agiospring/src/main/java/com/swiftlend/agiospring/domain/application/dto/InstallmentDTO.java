@@ -16,6 +16,7 @@ public class InstallmentDTO {
     private LocalDateTime dueDate;
     private Boolean isPaid;
     private LocalDateTime lastUpdate;
+    private String owner;
 
     public InstallmentDTO(Installment installment) {
         this.id = installment.getId();
@@ -23,5 +24,6 @@ public class InstallmentDTO {
         this.dueDate = installment.getDueDate();
         this.isPaid = installment.getIsPaid();
         this.lastUpdate = installment.getLastUpdate();
+        this.owner = installment.getOwner();
     }
 }

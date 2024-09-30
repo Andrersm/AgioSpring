@@ -2,7 +2,7 @@ package com.swiftlend.agiospring.domain.security.service;
 
 import com.swiftlend.agiospring.domain.security.model.User;
 import com.swiftlend.agiospring.domain.security.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
+@RequiredArgsConstructor
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

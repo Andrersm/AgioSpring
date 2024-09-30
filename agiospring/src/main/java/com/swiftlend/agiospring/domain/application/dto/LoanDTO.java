@@ -16,7 +16,7 @@ public class LoanDTO {
     private Long id;
     private Float amount;
     private LocalDateTime loan_date;
-    private Integer total_installments;
+    private Integer totalInstallments;
     private LocalDateTime lastUpdate;
     private Contact owner;
     private Integer installmentInterval;
@@ -25,7 +25,7 @@ public class LoanDTO {
         this.id = loan.getId();
         this.amount = loan.getAmount();
         this.loan_date = loan.getLoan_date();
-        this.total_installments = loan.getTotal_installments();
+        this.totalInstallments = loan.getTotalInstallments();
         this.lastUpdate = loan.getLastUpdate();
         this.owner = loan.getOwner();
         this.installmentInterval = loan.getInstallmentInterval();

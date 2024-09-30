@@ -2,7 +2,6 @@ package com.swiftlend.agiospring.domain.application.controller;
 
 
 import com.swiftlend.agiospring.domain.application.dto.ContactDTO;
-import com.swiftlend.agiospring.domain.application.model.Contact;
 import com.swiftlend.agiospring.domain.application.service.facade.ContactService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +22,15 @@ public class ContactController {
     public ResponseEntity<List<ContactDTO>> findAll() {
         List<ContactDTO> list = contactService.findAll();
         return ResponseEntity.ok().body(list);
+
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Contact> findById(@PathVariable Long id) {
-        Contact contact = contactService.findById(id);
-        return ResponseEntity.ok().body(contact);
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<ContactDTO> findById(@PathVariable Long id) {
+        ContactDTO contactDTO = contactService.findById(id);
+        return ResponseEntity.ok().body(contactDTO);
     }
+
 
     @Operation(summary = "Cria um novo contato")
     @PostMapping("/save")

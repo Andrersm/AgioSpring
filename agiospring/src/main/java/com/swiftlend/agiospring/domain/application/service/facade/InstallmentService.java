@@ -12,4 +12,5 @@ public interface InstallmentService {
     void delete(Long id);
     List<InstallmentDTO> findByLoan(Long id);
     void creatEachInstallment(Loan loan);
+    void pay(Long id);
 }

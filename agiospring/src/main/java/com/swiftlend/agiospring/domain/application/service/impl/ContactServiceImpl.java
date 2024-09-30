@@ -4,38 +4,63 @@ import com.swiftlend.agiospring.domain.application.dto.ContactDTO;
 import com.swiftlend.agiospring.domain.application.model.Contact;
 import com.swiftlend.agiospring.domain.application.repository.ContactRepository;
 import com.swiftlend.agiospring.domain.application.service.facade.ContactService;
+import com.swiftlend.agiospring.domain.security.model.User;
+import com.swiftlend.agiospring.domain.security.repository.UserRepository;
+import com.swiftlend.agiospring.domain.security.service.TokenService;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-
 import java.time.ZoneOffset;
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class ContactServiceImpl implements ContactService {
 
-    @Autowired
-    private ContactRepository contactRepository;
+    private final TokenService tokenService;
+    private final HttpServletRequest request;
+    private final UserRepository userRepository;
+    private final ContactRepository contactRepository;
 
     @Override
     public List<ContactDTO> findAll() {
-        List<Contact> contacts = contactRepository.findAll();
+        String authorizationHeader = request.getHeader("Authorization");
+        String token = authorizationHeader.substring(7);
+        String username = tokenService.validateToken(token);
+        User user = userRepository.findByUsername(username).orElse(null);
+        List<Contact> contacts = contactRepository.findAllByOwnerUser(user);
         return contacts.stream().map(ContactDTO::new).toList();
     }
 
     @Override
-    public Contact findById(Long id) {
+    public ContactDTO findById(Long id) {
         Contact contact = contactRepository.findById(id).orElse(null);
         if (contact != null) {
-            return contact;
+            return new ContactDTO(contact);
         }
         return null;
+    }
+
+    @Override
+    public Contact findContactByID(Long id) {
+        return contactRepository.findById(id).orElse(null);
     }
 
 
     @Override
     public ContactDTO create(ContactDTO contactDTO) {
+
+        String authorizationHeader = request.getHeader("Authorization");
+        String token = authorizationHeader.substring(7);
+        String username = tokenService.validateToken(token);
+        log.info("Token: " + username);
+        User user = userRepository.findByUsername(username).orElse(null);
         Contact contact = new Contact();
+        contact.setOwnerUser(user);
         contact.setFirstName(contactDTO.getFirstName());
         contact.setLastName(contactDTO.getLastName());
         contact.setEmail(contactDTO.getEmail());
@@ -70,5 +95,11 @@ public class ContactServiceImpl implements ContactService {
         }
         return null;
 
+    }
+
+    @Override
+    public ContactDTO findByCpf(String cpf) {
+        Contact contact = contactRepository.findByCpf(cpf);
+        return new ContactDTO(contact);
     }
 }

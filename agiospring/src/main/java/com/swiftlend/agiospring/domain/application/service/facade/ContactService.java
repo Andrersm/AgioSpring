@@ -10,9 +10,11 @@ import java.util.List;
 public interface ContactService {
 
     List<ContactDTO> findAll();
-    Contact findById(Long id);
+    ContactDTO findById(Long id);
+    Contact findContactByID(Long id);
     ContactDTO create(ContactDTO contactDTO);
     void delete(Long id);
     ContactDTO update(Long id, ContactDTO contactDTO);
+    ContactDTO findByCpf(String cpf);
 
 }

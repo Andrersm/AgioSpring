@@ -1,6 +1,7 @@
 package com.swiftlend.agiospring.domain.application.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.swiftlend.agiospring.domain.security.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +29,9 @@ public class Contact {
     private String email;
     private String phone;
     private LocalDateTime lastUpdate;
-    private String ownerID;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User ownerUser;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

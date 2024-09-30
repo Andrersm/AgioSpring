@@ -8,25 +8,20 @@ import com.swiftlend.agiospring.domain.application.repository.LoanRepository;
 import com.swiftlend.agiospring.domain.application.service.facade.ContactService;
 import com.swiftlend.agiospring.domain.application.service.facade.InstallmentService;
 import com.swiftlend.agiospring.domain.application.service.facade.LoanService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
-
+@RequiredArgsConstructor
 @Service
 public class LoanServiceImpl implements LoanService {
 
-    @Autowired
-    InstallmentService installmentService;
-
-    @Autowired
-    private LoanRepository loanRepository;
-
-    @Autowired
-    private ContactService contactService;
+    private final InstallmentService installmentService;
+    private final LoanRepository loanRepository;
+    private final ContactService contactService;
 
 
     @Override
@@ -46,11 +41,11 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public LoanDTO create(Long id, LoanDTO loanDTO) {
-        Contact contact = contactService.findById(id);
+        Contact contact = contactService.findContactByID(id);
         Loan loan = new Loan();
         loan.setLoan_date(loanDTO.getLoan_date());
         loan.setAmount(loanDTO.getAmount());
-        loan.setTotal_installments(loanDTO.getTotal_installments());
+        loan.setTotalInstallments(loanDTO.getTotalInstallments());
         loan.setOwner(contact);
         loan.setLastUpdate(LocalDateTime.now(ZoneOffset.ofHours(-3)));
         loan.setInstallmentInterval(loanDTO.getInstallmentInterval());
@@ -75,7 +70,7 @@ public class LoanServiceImpl implements LoanService {
             loan.setAmount(loanDTO.getAmount());
             loan.setLastUpdate(LocalDateTime.now(ZoneOffset.ofHours(-3)));
             loan.setOwner(loanDTO.getOwner());
-            loan.setTotal_installments(loanDTO.getTotal_installments());
+            loan.setTotalInstallments(loanDTO.getTotalInstallments());
             loanRepository.save(loan);
             return new LoanDTO(loan);
         }

@@ -22,7 +22,7 @@ public class Loan {
     private Long id;
     private Float amount;
     private LocalDateTime loan_date;
-    private Integer total_installments;
+    private Integer totalInstallments;
     private LocalDateTime lastUpdate = LocalDateTime.now();
     private Integer installmentInterval = 0;
 
@@ -33,7 +33,5 @@ public class Loan {
     @JsonIgnore
     @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Installment> installments = new ArrayList<>();
-
-
 
 }

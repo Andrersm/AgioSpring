@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value ="/Installments")
+@RequestMapping(value ="/installments")
 public class InstallmentsController {
 
     @Autowired
@@ -34,6 +34,11 @@ public class InstallmentsController {
     public ResponseEntity<Void> delete(@PathVariable Long id){
         installmentService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/pay/{id}")
+    public void pay(@PathVariable Long id){
+        installmentService.pay(id);
     }
 
 
