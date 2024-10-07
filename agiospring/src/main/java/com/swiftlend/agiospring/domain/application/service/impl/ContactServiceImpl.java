@@ -28,10 +28,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public List<ContactDTO> findAll() {
-        String authorizationHeader = request.getHeader("Authorization");
-        String token = authorizationHeader.substring(7);
-        String username = tokenService.validateToken(token);
-        User user = userRepository.findByUsername(username).orElse(null);
+        User user = tokenService.getUserFromToken();
         List<Contact> contacts = contactRepository.findAllByOwnerUser(user);
         return contacts.stream().map(ContactDTO::new).toList();
     }
@@ -53,12 +50,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public ContactDTO create(ContactDTO contactDTO) {
-
-        String authorizationHeader = request.getHeader("Authorization");
-        String token = authorizationHeader.substring(7);
-        String username = tokenService.validateToken(token);
-        log.info("Token: " + username);
-        User user = userRepository.findByUsername(username).orElse(null);
+        User user = tokenService.getUserFromToken();
         Contact contact = new Contact();
         contact.setOwnerUser(user);
         contact.setFirstName(contactDTO.getFirstName());

@@ -34,6 +34,4 @@ public class ContactDTO {
         this.lastUpdate = contact.getLastUpdate();
         this.loans = contact.getLoans();
     }
-
-
 }

@@ -4,12 +4,16 @@ import com.swiftlend.agiospring.domain.application.model.Installment;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
 @Setter
-public class InstallmentDTO {
+public class InstallmentDTO implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private Long id;
     private Float amount;

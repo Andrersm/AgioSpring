@@ -8,7 +8,10 @@ import com.swiftlend.agiospring.domain.application.repository.LoanRepository;
 import com.swiftlend.agiospring.domain.application.service.facade.ContactService;
 import com.swiftlend.agiospring.domain.application.service.facade.InstallmentService;
 import com.swiftlend.agiospring.domain.application.service.facade.LoanService;
+import com.swiftlend.agiospring.domain.security.model.User;
+import com.swiftlend.agiospring.domain.security.service.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,6 +25,7 @@ public class LoanServiceImpl implements LoanService {
     private final InstallmentService installmentService;
     private final LoanRepository loanRepository;
     private final ContactService contactService;
+    private final TokenService tokenService;
 
 
     @Override
@@ -40,7 +44,10 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
+    @CacheEvict(value = "installments", key = "#userIdStr")
     public LoanDTO create(Long id, LoanDTO loanDTO) {
+        User user = tokenService.getUserFromToken();
+        String userIdStr = user.getId();
         Contact contact = contactService.findContactByID(id);
         Loan loan = new Loan();
         loan.setLoan_date(loanDTO.getLoan_date());
