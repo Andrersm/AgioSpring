@@ -2,6 +2,7 @@ package com.swiftlend.agiospring.domain.application.controller;
 
 
 import com.swiftlend.agiospring.domain.application.dto.ContactDTO;
+import com.swiftlend.agiospring.domain.application.dto.SimpleContactDTO;
 import com.swiftlend.agiospring.domain.application.service.facade.ContactService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class ContactController {
 
     @Operation(summary = "Lista todos os contatos")
     @GetMapping("/list")
-    public ResponseEntity<List<ContactDTO>> findAll() {
-        List<ContactDTO> list = contactService.findAll();
+    public ResponseEntity<List<SimpleContactDTO>> findAll() {
+        List<SimpleContactDTO> list = contactService.findAll();
         return ResponseEntity.ok().body(list);
 
     }

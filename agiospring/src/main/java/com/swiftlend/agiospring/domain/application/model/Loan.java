@@ -2,6 +2,7 @@ package com.swiftlend.agiospring.domain.application.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.swiftlend.agiospring.domain.security.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,8 +25,13 @@ public class Loan {
     private LocalDateTime loan_date;
     private Integer totalInstallments;
     private LocalDateTime lastUpdate = LocalDateTime.now();
-    private Integer installmentInterval = 0;
+    private Integer installmentInterval;
+    private Integer payedInstallments;
+    private Boolean paid = false;
 
+    @ManyToOne
+    @JoinColumn(name = "user_owner_id", nullable = false)
+    private User userOwner;
     @ManyToOne
     @JoinColumn(name = "contact_id")
     private Contact owner;
@@ -33,5 +39,10 @@ public class Loan {
     @JsonIgnore
     @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Installment> installments = new ArrayList<>();
+
+    public void payInstallments(Boolean payed) {
+        payedInstallments += payed ? 1 : -1;
+        paid = (payedInstallments == totalInstallments);
+    }
 
 }

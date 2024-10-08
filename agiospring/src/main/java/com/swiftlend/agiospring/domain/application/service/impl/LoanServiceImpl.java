@@ -30,7 +30,8 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public List<LoanDTO> findAll() {
-        List<Loan> loans = loanRepository.findAll();
+        User user = tokenService.getUserFromToken();
+        List<Loan> loans = loanRepository.findAllByUserOwner(user);
         return loans.stream().map(LoanDTO::new).toList();
     }
 
@@ -44,12 +45,14 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    @CacheEvict(value = "installments", key = "#userIdStr")
+    @CacheEvict(value = "installments", keyGenerator = "jwtKeyGenerator")
     public LoanDTO create(Long id, LoanDTO loanDTO) {
         User user = tokenService.getUserFromToken();
         String userIdStr = user.getId();
         Contact contact = contactService.findContactByID(id);
         Loan loan = new Loan();
+        loan.setPayedInstallments(0);
+        loan.setUserOwner(user);
         loan.setLoan_date(loanDTO.getLoan_date());
         loan.setAmount(loanDTO.getAmount());
         loan.setTotalInstallments(loanDTO.getTotalInstallments());
@@ -63,10 +66,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public void delete(Long id) {
-        Loan loan = loanRepository.findById(id).orElse(null);
-        if (loan != null) {
-            loanRepository.delete(loan);
-        }
+        loanRepository.findById(id).ifPresent(loanRepository::delete);
     }
 
     @Override
@@ -76,7 +76,6 @@ public class LoanServiceImpl implements LoanService {
             loan.setLoan_date(loanDTO.getLoan_date());
             loan.setAmount(loanDTO.getAmount());
             loan.setLastUpdate(LocalDateTime.now(ZoneOffset.ofHours(-3)));
-            loan.setOwner(loanDTO.getOwner());
             loan.setTotalInstallments(loanDTO.getTotalInstallments());
             loanRepository.save(loan);
             return new LoanDTO(loan);

@@ -22,7 +22,6 @@ public class Installment {
     private LocalDateTime dueDate;
     private Boolean isPaid;
     private LocalDateTime lastUpdate;
-    private String owner;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

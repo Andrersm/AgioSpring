@@ -4,6 +4,7 @@ import com.swiftlend.agiospring.domain.application.dto.InstallmentDTO;
 import com.swiftlend.agiospring.domain.application.model.Installment;
 import com.swiftlend.agiospring.domain.application.model.Loan;
 import com.swiftlend.agiospring.domain.application.repository.InstallmentRepository;
+import com.swiftlend.agiospring.domain.application.repository.LoanRepository;
 import com.swiftlend.agiospring.domain.application.service.facade.InstallmentService;
 import com.swiftlend.agiospring.domain.security.model.User;
 import com.swiftlend.agiospring.domain.security.service.TokenService;
@@ -29,9 +30,10 @@ public class InstallmentServiceImpl implements InstallmentService {
 
     private final TokenService tokenService;
     private final InstallmentRepository installmentRepository;
+    private final LoanRepository loanRepository;
 
     @Override
-    @Cacheable(value = "installments", keyGenerator = "jwtKeyGenerator")
+    @Cacheable(value = "installments", keyGenerator = "jwtKeyGenerator", unless = "#result == null || #result.isEmpty()")
     public List<InstallmentDTO> findAll() {
         logger.info("Fetching installments from database...");
         User user = tokenService.getUserFromToken();
@@ -50,10 +52,7 @@ public class InstallmentServiceImpl implements InstallmentService {
 
     @Override
     public void delete(Long id) {
-        Installment installment = installmentRepository.findById(id).orElse(null);
-        if (installment != null) {
-            installmentRepository.delete(installment);
-        }
+        installmentRepository.findById(id).ifPresent(installmentRepository::delete);
     }
 
 
@@ -70,7 +69,6 @@ public class InstallmentServiceImpl implements InstallmentService {
         for (int i = 1; i <= loan.getTotalInstallments(); i++) {
             Installment installment = new Installment();
             installment.setLastUpdate(LocalDateTime.now(ZoneOffset.ofHours(-3)));
-            installment.setOwner(loan.getOwner().getFirstName());
             createOneinstallment(loan, amountInstallment, user, i, installment, installmentRepository);
         }
     }
@@ -83,8 +81,11 @@ public class InstallmentServiceImpl implements InstallmentService {
         User user = tokenService.getUserFromToken();
         Installment installment = installmentRepository.findById(id).orElse(null);
         if (installment != null) {
+            Loan loan = loanRepository.findById(installment.getLoan().getId()).orElse(null);
+            loan.payInstallments(!installment.getIsPaid());
             installment.setIsPaid(!installment.getIsPaid());
             installmentRepository.save(installment);
+            loanRepository.save(loan);
         }
     }
 

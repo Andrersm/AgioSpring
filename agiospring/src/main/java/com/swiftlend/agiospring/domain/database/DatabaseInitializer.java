@@ -58,10 +58,10 @@ public class DatabaseInitializer implements CommandLineRunner {
             System.out.println("Usuário administrador criado com sucesso. Token: " + token);
         } else {
             System.out.println("Usuário administrador já existe. Pulando criação.");
-        }
+        }}}
 
         // Obter o usuário administrador para associar aos contatos e empréstimos
-        User user = userRepository.findByUsername("admin").orElseThrow(() -> new RuntimeException("Admin user not found"));
+        /*User user = userRepository.findByUsername("admin").orElseThrow(() -> new RuntimeException("Admin user not found"));
 
         // 2. Criar 10.000 contatos
         List<Contact> contacts = new ArrayList<>();
@@ -114,7 +114,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             installment.setOwner(user.getUsername()); // Definindo o username do usuário como proprietário
             InstallmentServiceImpl.createOneinstallment(loan, amountInstallment, user, i, installment, installmentRepository);
         }
-    }
-}
+    }*/
+
 
 

@@ -1,6 +1,5 @@
 package com.swiftlend.agiospring.domain.application.dto;
 
-import com.swiftlend.agiospring.domain.application.model.Contact;
 import com.swiftlend.agiospring.domain.application.model.Loan;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,8 +17,9 @@ public class LoanDTO {
     private LocalDateTime loan_date;
     private Integer totalInstallments;
     private LocalDateTime lastUpdate;
-    private Contact owner;
+    private Long loanID;
     private Integer installmentInterval;
+    private Boolean paid;
 
     public LoanDTO(Loan loan) {
         this.id = loan.getId();
@@ -27,8 +27,9 @@ public class LoanDTO {
         this.loan_date = loan.getLoan_date();
         this.totalInstallments = loan.getTotalInstallments();
         this.lastUpdate = loan.getLastUpdate();
-        this.owner = loan.getOwner();
+        this.loanID = loan.getId();
         this.installmentInterval = loan.getInstallmentInterval();
+        this.paid = loan.getPaid();
     }
 
 }

@@ -7,7 +7,6 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -20,7 +19,6 @@ public class InstallmentDTO implements Serializable {
     private LocalDateTime dueDate;
     private Boolean isPaid;
     private LocalDateTime lastUpdate;
-    private String owner;
 
     public InstallmentDTO(Installment installment) {
         this.id = installment.getId();
@@ -28,6 +26,5 @@ public class InstallmentDTO implements Serializable {
         this.dueDate = installment.getDueDate();
         this.isPaid = installment.getIsPaid();
         this.lastUpdate = installment.getLastUpdate();
-        this.owner = installment.getOwner();
     }
 }

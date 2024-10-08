@@ -1,19 +1,18 @@
 package com.swiftlend.agiospring.domain.application.dto;
 
 import com.swiftlend.agiospring.domain.application.model.Contact;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
-public class ContactDTO {
-
+public class SimpleContactDTO {
     private Long id;
     private String firstName;
     private String lastName;
@@ -21,9 +20,8 @@ public class ContactDTO {
     private String cpf;
     private LocalDateTime lastUpdate;
     private String phone;
-    private List<LoanDTO> loans = new ArrayList<>();
 
-    public ContactDTO(Contact contact) {
+    public SimpleContactDTO(Contact contact) {
         this.id = contact.getId();
         this.firstName = contact.getFirstName();
         this.lastName = contact.getLastName();
@@ -31,7 +29,5 @@ public class ContactDTO {
         this.cpf = contact.getCpf();
         this.phone = contact.getPhone();
         this.lastUpdate = contact.getLastUpdate();
-        this.loans = contact.getLoans().stream()
-                .map(LoanDTO::new).toList();
     }
 }
